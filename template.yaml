@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+
+Resources:
+  #--------------------
+  # イベント登録
+  #--------------------
+  CreateEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/ # ソースコードのパス
+      Handler: index.handler # 実行する関数のハンドラー
+      Events:
+        CreateEventApi:
+          Type: Api
+          Properties:
+            Path: /events
+            Method: post
+
+  #--------------------
+  # イベント一覧取得
+  #--------------------
+  ListEventsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: index.handler
+      Events:
+        ListEventsApi:
+          Type: Api
+          Properties:
+            Path: /events
+            Method: get
+
+  #--------------------
+  # 予約登録
+  #--------------------
+  CreateReservationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: index.handler
+      Events:
+        CreateReservationApi:
+          Type: Api
+          Properties:
+            Path: /events/{eventId}/reservations
+            Method: post
+
+  #--------------------
+  # 予約詳細取得
+  #--------------------
+  GetReservationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: index.handler
+      Events:
+        GetReservationApi:
+          Type: Api
+          Properties:
+            Path: /events/{eventId}/reservations/{reservationId}
+            Method: get
+  
+  #--------------------
+  # 予約キャンセル
+  #--------------------
+  DeleteReservationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: index.handler
+      Events:
+        DeleteReservationApi:
+          Type: Api
+          Properties:
+            Path: /events/{eventId}/reservations/{reservationId}
+            Method: delete
